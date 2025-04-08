@@ -1,0 +1,192 @@
+---
+title: "C00269804 Project - Hotel Satisfaction by Membership"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(ggplot2)
+library(dplyr)
+library(plotly)
+library(stringr)
+library(viridis)
+hotelSatisfaction <- read.csv("hotel_satisfaction.csv")
+```
+
+Overall Satisfaction
+===
+
+Column {data-width=600}
+-----------------------------------------------------------------------
+
+### Chart A
+
+```{r Overall Satisfaction, message=FALSE}
+overallSat <- hotelSatisfaction %>%
+  group_by(visitPurpose,eliteSegment)%>%
+  select(custID,satOverall,visitPurpose,eliteSegment)%>%
+  summarise(meanSat = mean(satOverall))%>%
+  ggplot(aes(visitPurpose,meanSat,fill=eliteSegment))+
+  geom_col()+
+  theme_bw()+
+  theme(
+    axis.text.x = element_text(angle=45,hjust=1,vjust=1),
+    legend.title = element_text(face="bold"),
+    legend.position = "right",
+    legend.background = element_rect(fill="lightblue",
+                                  size=0.5, linetype="solid", 
+                                  colour ="darkblue"),
+    plot.title = element_text(face="bold",colour="#9e0142")
+  )+
+    labs(
+    title="Average Customer Satisfaction by Visit Purpose",
+    subtitle = "All Memberships",
+    x="Visit Purpose",
+    y="Average Satisfaction Level (0-28)"
+  )+
+  scale_fill_viridis_d()
+
+ggplotly(overallSat)
+```
+
+Platinum & Gold
+===
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+### Platinum Satisfaction
+
+```{r Platinum Satisfaction}
+platSat <- hotelSatisfaction %>%
+  filter(eliteSegment=="Platinum")%>%
+  group_by(visitPurpose)%>%
+  select(custID,satOverall,visitPurpose)%>%
+  summarise(meanSat = mean(satOverall))%>%
+  ggplot(aes(visitPurpose,meanSat,fill=visitPurpose))+
+  geom_col()+
+  theme_bw()+
+  theme(
+    axis.text.x = element_text(angle=45,hjust=1,vjust=1),
+    legend.position = "none",
+    plot.title = element_text(face="bold",colour="darkgrey")
+  )+
+    labs(
+    title="Average Platinum Level Hotel Customer Satisfaction",
+    subtitle = "Platinum Membership",
+    x="Visit Purpose",
+    y="Average Satisfaction Level
+    (0-7)"
+  )+
+  scale_fill_viridis_d()
+
+ggplotly(platSat)
+
+
+```
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+### Gold Satisfaction
+```{r Gold Satisfaction}
+goldSat <- hotelSatisfaction %>%
+  filter(eliteSegment=="Gold")%>%
+  group_by(visitPurpose)%>%
+  select(custID,satOverall,visitPurpose)%>%
+  summarise(meanSat = mean(satOverall))%>%
+  ggplot(aes(visitPurpose,meanSat,fill=visitPurpose))+
+  geom_col()+
+  theme_bw()+
+  theme(
+    axis.text.x = element_text(angle=45,hjust=1,vjust=1),
+    legend.position = "none",
+    plot.title = element_text(face="bold",colour="gold")
+  )+
+    labs(
+    title="Average Gold Level Hotel Customer Satisfaction",
+    subtitle = "Gold Membership",
+    x="Visit Purpose",
+    y="Average Satisfaction Level
+    (0-7)"
+  )+
+  scale_fill_viridis_d()
+
+ggplotly(goldSat)
+
+
+```
+
+Silver & No-Status
+===
+Column {data-width=350}
+-----------------------------------------------------------------------
+### Silver Satisfaction
+```{r Silver Satisfaction}
+silverSat <- hotelSatisfaction %>%
+  filter(eliteSegment=="Silver")%>%
+  group_by(visitPurpose)%>%
+  select(custID,satOverall,visitPurpose)%>%
+  summarise(meanSat = mean(satOverall))%>%
+  ggplot(aes(visitPurpose,meanSat,fill=visitPurpose))+
+  geom_col()+
+  theme_bw()+
+  theme(
+    axis.text.x = element_text(angle=45,hjust=1,vjust=1),
+    legend.position = "none",
+    plot.title = element_text(face="bold",colour="grey")
+  )+
+    labs(
+    title="Average Silver Level Hotel Customer Satisfaction",
+    subtitle = "Silver Membership",
+    x="Visit Purpose",
+    y="Average Satisfaction Level (0-7)"
+  )+
+  scale_fill_viridis_d()
+
+ggplotly(silverSat)
+
+
+```
+
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+### No-Status Satisfaction
+```{r NoStatus Satisfaction}
+noStatSat <- hotelSatisfaction %>%
+  filter(eliteSegment=="NoStatus")%>%
+  group_by(visitPurpose)%>%
+  select(custID,satOverall,visitPurpose)%>%
+  summarise(meanSat = mean(satOverall))%>%
+  ggplot(aes(visitPurpose,meanSat,fill=visitPurpose))+
+  geom_col()+
+  theme_bw()+
+  theme(
+    axis.text.x = element_text(angle=45,hjust=1,vjust=1),
+    legend.position = "none",
+    plot.title = element_text(face="bold",colour="black")
+  )+
+    labs(
+    title="Average Level of No-Status Hotel Customer Satisfaction",
+    subtitle = "No Membership",
+    x="Visit Purpose",
+    y="Average Satisfaction Level (0-7)"
+  )+
+  scale_fill_viridis_d()
+
+ggplotly(noStatSat)
+
+
+```
+
+
+
+
+
+
+
+
+
+
